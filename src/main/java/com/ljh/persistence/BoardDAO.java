@@ -1,5 +1,6 @@
 package com.ljh.persistence;
 
+import java.util.List;
 import com.ljh.domain.BoardVO;
 
 public interface BoardDAO {
@@ -14,4 +15,7 @@ public interface BoardDAO {
 
 	// 삭제.
 	public void delete(int bno) throws Exception;
+	
+	// 목록.
+	public List<BoardVO> list() throws Exception;
 }

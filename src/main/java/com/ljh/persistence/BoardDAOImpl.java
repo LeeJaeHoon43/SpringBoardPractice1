@@ -1,5 +1,7 @@
 package com.ljh.persistence;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -32,5 +34,10 @@ public class BoardDAOImpl implements BoardDAO{
 	@Override
 	public void delete(int bno) throws Exception {
 		sqlSession.delete(namespace + ".delete", bno);
+	}
+
+	@Override
+	public List<BoardVO> list() throws Exception {
+		return sqlSession.selectList(namespace + ".list");
 	}
 }

@@ -23,4 +23,11 @@
 	 <delete id="delete">
 	 	DELETE FROM board1 WHERE bno = #{bno}
 	 </delete>
+	 
+	 <!-- 목록 -->
+	 <select id="list" resultType="com.ljh.domain.BoardVO">
+	 	SELECT bno, title, writer, regDate
+	    FROM board1
+	    ORDER BY bno DESC
+	 </select>
 </mapper>
