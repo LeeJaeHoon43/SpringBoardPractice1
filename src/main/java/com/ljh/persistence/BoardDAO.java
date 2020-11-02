@@ -2,6 +2,8 @@ package com.ljh.persistence;
 
 import java.util.List;
 import com.ljh.domain.BoardVO;
+import com.ljh.domain.Criteria;
+import com.ljh.domain.SearchCriteria;
 
 public interface BoardDAO {
 	// 작성.
@@ -18,4 +20,16 @@ public interface BoardDAO {
 	
 	// 목록.
 	public List<BoardVO> list() throws Exception;
+	
+	// 목록 + 페이징.
+	public List<BoardVO> listPage(Criteria cri) throws Exception;
+	
+	// 게시물 총 갯수.
+	public int listCount() throws Exception;
+	
+	// 목록 + 페이징 + 검색.
+	public List<BoardVO> listSearch(SearchCriteria scri) throws Exception;
+	
+	// 검색 결과 갯수.
+	public int countSearch(SearchCriteria scri) throws Exception;
 }

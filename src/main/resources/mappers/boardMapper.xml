@@ -30,4 +30,53 @@
 	    FROM board1
 	    ORDER BY bno DESC
 	 </select>
+	 
+	 <!-- 페이징 처리. -->
+	 <select id="listPage" resultType="com.ljh.domain.BoardVO" parameterType="com.ljh.domain.Criteria">
+	 	SELECT bno, title, content, writer, regDate, viewCnt
+	    FROM (
+	        SELECT bno, title, content, writer, regDate, viewCnt,
+	            row_number() over(ORDER BY bno DESC) AS rNum
+	        FROM board1
+	        ) mb
+	    WHERE rNum BETWEEN #{rowStart} AND #{rowEnd} ORDER BY bno DESC
+	 </select>
+	 
+	 <!-- 게시물의 총 갯수 구하기. -->
+	 <select id="listCount" resultType="int">
+	 	<![CDATA[
+	 		SELECT COUNT(bno) FROM board1 WHERE bno > 0
+	 	]]>
+	 </select>
+	 
+	 <!-- 검색 -->
+	 <select id="listSearch" resultType="com.ljh.domain.BoardVO" parameterType="com.ljh.domain.SearchCriteria">
+	 	SELECT bno, title, content, writer, regDate, viewCnt
+	       FROM (
+	           SELECT bno, title, content, writer, regDate, viewCnt,
+	               row_number() over(ORDER BY bno DESC) as rNum
+	           FROM board1
+	   			<include refid="search"></include>
+	   		) mb 
+	   	WHERE rNum BETWEEN #{rowStart} AND #{rowEnd} ORDER BY bno DESC
+	 </select>
+	 
+	 <sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">WHERE title LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'c'.toString()">WHERE content LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'w'.toString()">WHERE writer LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'tc'.toString()">WHERE (title LIKE '%' || #{keyword} || '%')										or (content like '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<!-- 검색어에 맞는 게시물 갯수 -->
+	<select id="countSearch" resultType="int">
+		SELECT COUNT(bno)
+		FROM board1
+			<include refid="search"></include>
+		<![CDATA[
+			AND bno > 0
+		]]>
+	</select>
 </mapper>

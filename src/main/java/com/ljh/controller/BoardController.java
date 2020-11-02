@@ -1,17 +1,19 @@
 package com.ljh.controller;
 
 import java.util.List;
-
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.ljh.domain.BoardVO;
+import com.ljh.domain.Criteria;
+import com.ljh.domain.PageMaker;
+import com.ljh.domain.SearchCriteria;
 import com.ljh.service.BoardService;
 
 @Controller
@@ -82,5 +84,31 @@ public class BoardController {
 		logger.info("post delete");
 		service.delete(bno);
 		return "redirect:/board/list";
+	}
+	
+	// 글 목록 + 페이징.
+	@RequestMapping(value = "/listPage", method = RequestMethod.GET)
+	public void listPage(@ModelAttribute("cri") Criteria cri, Model model) throws Exception{
+		logger.info("get list page");
+		List<BoardVO> list = service.listPage(cri);
+		model.addAttribute("list", list);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(service.listCount());
+		model.addAttribute("pageMaker", pageMaker);
+	}
+	
+	// 글 목록 + 페이징 + 검색.
+	@RequestMapping(value = "/listSearch", method = RequestMethod.GET)
+	public void listSearch(@ModelAttribute("scri") SearchCriteria scri, Model model) throws Exception{
+		logger.info("get list search");
+		List<BoardVO> list = service.listSearch(scri);
+		model.addAttribute("list", list);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(scri);
+		pageMaker.setTotalCount(service.listCount());
+		model.addAttribute("pageMaker", pageMaker);
 	}
 }
