@@ -17,23 +17,15 @@
 		<nav><%@include file="include/nav.jsp" %></nav>
 		<section id="container">
 			<form role="form" method="post" autocomplete="off">
+				<input type="hidden" id="bno" name="bno" value="${readReply.bno}" readonly="readonly" />
+				<input type="hidden" id="rno" name="rno" value="${readReply.rno}" readonly="readonly" /> 
+				<input type="hidden" id="page" name="page" value="${scri.page}" readonly="readonly" />
+				<input type="hidden" id="perPageNum" name="perPageNum" value="${scri.perPageNum}" readonly="readonly" />
+				<input type="hidden" id="searchType" name="searchType" value="${scri.searchType}" readonly="readonly" />
+				<input type="hidden" id="keyword" name="keyword" value="${scri.keyword}" readonly="readonly" />
 				<p>
-					<label for="bno">글 번호</label><input type="text" id="bno" name="bno"
-						value="${modify.bno}" readonly="readonly" />
-				</p>
-				<p>
-					<label for="title">글 제목</label><input type="text" id="title"
-						name="title" value="${modify.title}" />
-				</p>
-				<p>
-					<label for="content">글 내용</label>
-					<textarea id="content" name="content">${modify.content}</textarea>
-				</p>
-				<p>
-					<label for="writer">작성자</label><input type="text" id="writer"
-						name="writer" value="${modify.writer}" /><br /> <label>작성
-						날짜</label> <span><fmt:formatDate value="${modify.regDate}"
-							pattern="yyyy-MM-dd" /></span>
+				    <label for="content">글 내용</label>
+				    <textarea id="content" name="content" >${readReply.content}</textarea>
 				</p>
 				<p>
 					<button type="submit">수정</button>
@@ -43,7 +35,7 @@
 						var formObj = $("form[role='form']");
 						// 수정 버튼 클릭.
 						$("#cancel_btn").click(function() {
-							self.location = "/board/read?bno=${modify.bno}"
+							self.location = "/board/read?bno=${readReply.bno}"
 								   + "&page=${scri.page}"
 								   + "&perPageNum=${scri.perPageNum}"
 								   + "&searchType=${scri.searchType}"

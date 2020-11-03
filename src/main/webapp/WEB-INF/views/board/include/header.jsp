@@ -7,6 +7,8 @@
 <title>게시판</title>
 </head>
 <body>
-	<h1>이재훈 게시판</h1>
+	<div class="page-header">
+		<h1>이재훈 게시판</h1>
+	</div>
 </body>
 </html>
