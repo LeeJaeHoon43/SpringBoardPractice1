@@ -2,6 +2,7 @@ package com.ljh.controller;
 
 import java.util.List;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.ljh.domain.BoardVO;
 import com.ljh.domain.Criteria;
 import com.ljh.domain.PageMaker;
@@ -34,8 +34,12 @@ public class BoardController {
 
 	// 글 작성 페이지.
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
-	public void getWrite() throws Exception{
+	public void getWrite(HttpSession session, Model model) throws Exception{
 		logger.info("get Write");
+		Object loginInfo = session.getAttribute("member");
+		if (loginInfo == null) {
+			model.addAttribute("msg", "login_error");
+		}
 	}
 
 	// 글 작성.
@@ -173,7 +177,6 @@ public class BoardController {
 	public String replyUpdate(ReplyVO vo, SearchCriteria scri, RedirectAttributes rttr) throws Exception{
 		logger.info("reply update");
 		replyService.replyUpdate(vo);
-
 		rttr.addAttribute("bno", vo.getBno());
 		rttr.addAttribute("page", scri.getPage());
 		rttr.addAttribute("perPageNum", scri.getPerPageNum());
@@ -187,7 +190,6 @@ public class BoardController {
 	public String replyDelete(ReplyVO vo, SearchCriteria scri, RedirectAttributes rttr) throws Exception{
 		logger.info("reply delete");
 		replyService.replyDelete(vo);
-
 		rttr.addAttribute("bno", vo.getBno());
 		rttr.addAttribute("page", scri.getPage());
 		rttr.addAttribute("perPageNum", scri.getPerPageNum());
@@ -195,5 +197,4 @@ public class BoardController {
 		rttr.addAttribute("keyword", scri.getKeyword());
 		return "redirect:/board/read";
 	}
-
 }
