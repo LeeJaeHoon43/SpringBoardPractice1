@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,9 @@ public class MemberController {
 	@Inject
 	MemberService memberService;
 	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+	
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public void getRegister()throws Exception{
 		logger.info("get register");
@@ -30,6 +35,9 @@ public class MemberController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String postRegister(MemberVO vo) throws Exception{
 		logger.info("post register");
+		String inputPass = vo.getUserPass();
+		String pass = passwordEncoder.encode(inputPass);
+		vo.setUserPass(pass);
 		memberService.register(vo);
 		return "redirect:/";
 	}
@@ -39,11 +47,14 @@ public class MemberController {
 		logger.info("post login");
 		HttpSession session = req.getSession();
 		MemberVO login = memberService.login(vo);
-		if (login == null) {
+		
+		boolean passMatch = passwordEncoder.matches(vo.getUserPass(), login.getUserPass());
+		
+		if (login != null && passMatch) {
+			session.setAttribute("member", login);
+		}else {
 			session.setAttribute("member", null);
 			rttr.addAttribute("msg", false);
-		}else {
-			session.setAttribute("member", login);
 		}
 		return "redirect:/";
 	}

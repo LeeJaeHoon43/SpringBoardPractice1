@@ -25,4 +25,9 @@
 	<select id="idCheck" resultType="com.ljh.domain.MemberVO">
 		SELECT userId FROM myMember WHERE userId = #{userId}
 	</select>
+	
+	<!-- 로그인 (암호화 적용) -->
+	<select id="loginBcrypt" resultType="com.ljh.domain.MemberVO">
+		SELECT userId, userPass, userName FROM myMember WHERE userId = #{userId}
+	</select>
 </mapper>
